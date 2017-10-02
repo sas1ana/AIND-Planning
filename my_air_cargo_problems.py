@@ -135,6 +135,7 @@ class AirCargoProblem(Problem):
         possible_actions = []
         kb = PropKB()
         kb.tell(decode_state(state, self.state_map).pos_sentence())
+        """
         for action in self.actions_list:
             is_possible = True
             for clause in action.precond_pos:
@@ -145,6 +146,8 @@ class AirCargoProblem(Problem):
                     is_possible = False
             if is_possible:
                 possible_actions.append(action)
+        """
+        possible_actions = [ a for a in self.actions_list if a.check_precond(kb, a.args) ]
         return possible_actions
         
 
@@ -212,12 +215,15 @@ class AirCargoProblem(Problem):
         executed.
         '''
         # TODO implement (see Russell-Norvig Ed-3 10.2.3  or Russell-Norvig Ed-2 11.2)
+        """
         count = 0
         num_states = len(self.state_map)
         for i in range(0, num_states):
             if self.state_map[i] in self.goal and node.state[i] == 'F':
                 count += 1
-        return count
+        """
+        queries = [ q for q in self.goal if q not in decode_state(node.state, self.state_map).pos]
+        return len(queries)
 
 
 def air_cargo_p1() -> AirCargoProblem:
